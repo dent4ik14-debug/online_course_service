@@ -1,0 +1,52 @@
+{% load static %}
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <!-- Підключаємо зовнішній CSS-файл -->
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}" />
+  </head>
+  <body>
+    <header>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="{% url 'index' %}">Головна</a>
+        </div>
+        <div class="auth-links nav-links">
+          <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout">Вийти</button>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="profile-card">
+        {% if user.role == 'teacher' %}
+          <div class="profile-badge teacher-badge">Викладач</div>
+          <h1 class="profile-welcome">Вітаємо вас, наш викладачу!</h1>
+          <p class="profile-info">З поверненням, <strong>{{ user.get_full_name|default:user.username }}</strong>.</p>
+          
+          <div class="profile-actions">
+            <a href="{% url 'courses:add_course' %}" class="btn-primary">Додати курс</a>
+          </div>
+        {% else %}
+          <div class="profile-badge student-badge">Студент</div>
+          <h1 class="profile-welcome">Вітаємо вас, наш учню!</h1>
+          <p class="profile-info">З поверненням, <strong>{{ user.get_full_name|default:user.username }}</strong>.</p>
+        {% endif %}
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
+    </footer>
+  </body>
+</html>

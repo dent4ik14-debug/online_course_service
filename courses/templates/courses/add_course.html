@@ -1,0 +1,159 @@
+{% load static %}
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Додати курс</title>
+    <link rel="stylesheet" href="{% static 'courses/css/style.css' %}" />
+    <style>
+      /* Стилі для форми створення курсу */
+      .form-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background: var(--card-bg, #ffffff);
+        padding: 2rem;
+        border-radius: var(--radius, 12px);
+        box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+        border: 1px solid var(--border-color, #e2e8f0);
+      }
+
+      .form-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--text-color, #1e293b);
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        color: var(--text-color, #1e293b);
+      }
+
+      .form-group input[type="text"],
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color, #cbd5e1);
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: #fff;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .form-group input[type="text"]:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color, #2563eb);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+
+      .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      /* Кастомне поле для файлів */
+      .file-input-wrapper {
+        border: 2px dashed var(--border-color, #cbd5e1);
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        background-color: var(--bg-color, #f8fafc);
+        cursor: pointer;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+      }
+
+      .file-input-wrapper:hover {
+        border-color: var(--primary-color, #2563eb);
+        background-color: #eff6ff;
+      }
+
+      .file-input-wrapper input[type="file"] {
+        width: 100%;
+        cursor: pointer;
+      }
+
+      /* Кнопка відправки */
+      .btn-submit {
+        width: 100%;
+        background-color: var(--primary-color, #2563eb);
+        color: white;
+        padding: 0.85rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        margin-top: 1rem;
+      }
+
+      .btn-submit:hover {
+        background-color: var(--primary-hover, #1d4ed8);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="{% url 'index' %}">Головна</a>
+          <a href="{% url 'courses:courses_list' %}">Список курсів</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="form-container">
+        <h2 class="form-title">Створення нового курсу</h2>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+          </div>
+
+          <div class="form-group">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+          </div>
+
+          <div class="form-group">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+          </div>
+
+          <div class="form-group">
+            <label for="id_files">Відеоматеріали курсу (можна обрати кілька):</label>
+            <div class="file-input-wrapper">
+              <input type="file" name="files" id="id_files" multiple accept="video/*" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">Зберегти курс</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
+    </footer>
+  </body>
+</html>

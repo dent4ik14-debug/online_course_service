@@ -1,0 +1,48 @@
+{% load static %}
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вхід</title>
+    <!-- Підключаємо зовнішній CSS-файл -->
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}" />
+  </head>
+  <body>
+    <header>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="{% url 'index' %}">Головна</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="auth-card">
+        <h1 class="auth-title">Вхід</h1>
+
+        <form method="post" class="auth-form">
+          {% csrf_token %}
+          
+          <div class="form-fields">
+            {{ form.as_p }}
+          </div>
+
+          <button type="submit" class="btn-submit">Увійти</button>
+        </form>
+
+        <p class="auth-switch">
+          Немає акаунту? <a href="{% url 'users:register' %}">Зареєструватись</a>
+        </p>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
+    </footer>
+  </body>
+</html>

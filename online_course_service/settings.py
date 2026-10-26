@@ -32,6 +32,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
 
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -133,3 +138,9 @@ MAILERS = {
 
 
 AUTH_USER_MODEL = 'users.User'
+
+AUTH_PASSWORD_VALIDATORS = []
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'

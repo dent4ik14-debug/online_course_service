@@ -1,45 +1,67 @@
+{% load static %}
 <!doctype html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
+    <!-- Підключаємо зовнішній CSS-файл -->
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}" />
   </head>
   <body>
     <header>
-      <div>
-        <div>
-          <a href="{% url "index" %}">Головна</a>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="{% url 'index' %}">Головна</a>
+          <a href="{% url 'courses:courses_list' %}">Список курсів</a>
         </div>
-        <div>
-            <a href="">Профіль</a>
-            <form action="" method="post" style="display: inline;">
+        <div class="auth-links nav-links">
+          {% if user.is_authenticated %}
+            <a href="{% url 'users:profile' %}">Профіль ({{ user.username }})</a>
+            <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
               {% csrf_token %}
-              <button type="submit" class="btn-link" style="padding: 0; border: none; background: none;">Вийти</button>
+              <button type="submit" class="btn-logout">Вийти</button>
             </form>
-            <a href="">Увійти</a>
-            <a href="">Зареєструватись</a>
+          {% else %}
+            <a href="{% url 'users:login' %}">Увійти</a>
+            <a href="{% url 'users:register' %}">Зареєструватись</a>
+          {% endif %}
         </div>
       </div>
     </header>
 
     <main>
-        <h2>Всі викладачі які існують на платформі</h2>
-      <section>
-        {% for user in object_list %}
-          <div>
-            <a href="{% url "users:author_detail" pk=user.id %}">{{ user.username }}</a>
-          </div>
-        {% empty %}
-          <p>Користувачів не знайдено.</p>
-        {% endfor %}
+      <section class="teachers-section">
+        <h2 class="section-title">Всі викладачі, які існують на платформі</h2>
+
+        <div class="teachers-grid">
+          {% for teacher in object_list %}
+            <div class="teacher-card">
+              <div class="teacher-avatar">
+                {{ teacher.username|first|upper }}
+              </div>
+              <div class="teacher-info">
+                <a href="{% url 'users:author_detail' pk=teacher.id %}" class="teacher-name">
+                  {{ teacher.get_full_name|default:teacher.username }}
+                </a>
+                <p class="teacher-username">@{{ teacher.username }}</p>
+              </div>
+            </div>
+          {% empty %}
+            <div class="empty-state">
+              <p>Викладачів поки що не знайдено.</p>
+            </div>
+          {% endfor %}
+        </div>
       </section>
     </main>
 
     <footer>
-      <p>Номер телефону: +360639660508</p>
-      <p>email-адреса: dent4ik14@gmail.com</p>
-      <p>telegram: @Denes_Solom; @G0nh1k</p>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
     </footer>
   </body>
 </html>

@@ -1,6 +1,9 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 from .models import User
+from django.contrib.auth.views import LoginView
+from .forms import CustomUserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class UsersList(ListView):
     model = User
@@ -27,3 +30,20 @@ class AboutAuthor(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Про Викладача'
         return context
+
+class CustomLoginView(LoginView):
+    template_name = 'users/login.html'
+    success_url = reverse_lazy('index')
+
+class CustomRegistrationView(CreateView):
+    form_class = CustomUserCreationForm
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('users:login')
+
+class ProfileView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'users/profile.html'
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+        return self.request.user

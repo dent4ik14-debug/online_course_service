@@ -1,62 +1,90 @@
+{% load static %}
 <!doctype html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
+    <!-- Підключаємо зовнішній CSS-файл -->
+    <link rel="stylesheet" href="{% static 'users/css/style.css' %}" />
   </head>
   <body>
     <header>
-      <div>
-        <div>
-          <a href="{% url "index" %}">Головна</a>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="{% url 'index' %}">Головна</a>
+          <a href="{% url 'courses:courses_list' %}">Список курсів</a>
+          <a href="{% url 'users:users_list' %}">Викладачі</a>
         </div>
-        <div>
-            <a href="">Профіль</a>
-            <form action="" method="post" style="display: inline;">
+        <div class="auth-links nav-links">
+          {% if user.is_authenticated %}
+            <a href="{% url 'users:profile' %}">Профіль ({{ user.username }})</a>
+            <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
               {% csrf_token %}
-              <button type="submit" class="btn-link" style="padding: 0; border: none; background: none;">Вийти</button>
+              <button type="submit" class="btn-logout">Вийти</button>
             </form>
-            <a href="">Увійти</a>
-            <a href="">Зареєструватись</a>
+          {% else %}
+            <a href="{% url 'users:login' %}">Увійти</a>
+            <a href="{% url 'users:register' %}">Зареєструватись</a>
+          {% endif %}
         </div>
       </div>
     </header>
 
     <main>
-      <h1>
-        {% if curent_category %}
-          Категорія: {{ curent_category.name }}
-        {% else %}
-          Всі категорії
-        {% endif %}
-      </h1>
+      <section class="courses-header">
+        <h1 class="hero-title">Каталог курсів</h1>
 
-      <div>
-        <a href="{% url 'courses:courses_list' %}">Всі категорії</a>
-
-        {% for category in categories %}
-          <a href="{% url 'courses:courses_list' %}?category_id={{ category.id }}">
-            {{ category.name }}
+        <!-- Фільтрація за категоріями -->
+        <div class="category-filters">
+          <a href="{% url 'courses:courses_list' %}" class="filter-chip {% if not curent_category %}active{% endif %}">
+            Всі категорії
           </a>
-        {% empty %}
-          <p>Категорій поки немає.</p>
-        {% endfor %}
-      </div>
+          {% for category in categories %}
+            <a href="{% url 'courses:courses_list' %}?category_id={{ category.id }}" 
+               class="filter-chip {% if curent_category.id == category.id %}active{% endif %}">
+              {{ category.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </section>
 
-      <section>
-        {% for course in object_list %}
-          <div>
-            <a href="{% url 'courses:course_detail' course.id %}">{{ course.name }}</a>
-            
+      <!-- Список курсів -->
+      <section class="courses-grid">
+        {% for course in courses %}
+          <div class="course-card">
+            {% if course.category %}
+              <div class="course-category-tag">{{ course.category.name }}</div>
+            {% endif %}
+
+            <h3 class="course-card-title">
+              <a href="{% url 'courses:course_detail' pk=course.id %}">{{ course.name }}</a>
+            </h3>
+
+            <div class="course-card-author">
+              Автор: {{ course.authot.get_full_name|default:course.authot.username }}
+            </div>
+
+            <p class="course-card-desc">{{ course.description }}</p>
+
+            <a href="{% url 'courses:course_detail' pk=course.id %}" class="btn-detail">
+              Переглянути курс
+            </a>
+          </div>
+        {% empty %}
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <p>Наразі немає доступних курсів у цій категорії.</p>
+          </div>
         {% endfor %}
       </section>
     </main>
 
     <footer>
-      <p>Номер телефону: +360639660508</p>
-      <p>email-адреса: dent4ik14@gmail.com</p>
-      <p>telegram: @Denes_Solom; @G0nh1k</p>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
     </footer>
   </body>
 </html>

@@ -1,34 +1,100 @@
+{% load static %}
 <!doctype html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
+    <!-- Підключаємо static CSS -->
+    <link rel="stylesheet" href="{% static 'courses/css/style.css' %}" />
+    <style>
+      /* Додаткові стилі для головної сторінки */
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .btn-logout {
+        background: none;
+        border: none;
+        color: var(--text-color, #1e293b);
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.2s ease;
+      }
+
+      .btn-logout:hover {
+        color: #ef4444; /* червоний акцент при наведенні на "Вийти" */
+      }
+
+      .hero-section {
+        background-color: var(--card-bg, #ffffff);
+        padding: 4rem 2rem;
+        border-radius: var(--radius, 12px);
+        text-align: center;
+        box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+        border: 1px solid var(--border-color, #e2e8f0);
+        margin-top: 1rem;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-color, #1e293b);
+        margin-bottom: 1rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-muted, #64748b);
+      }
+    </style>
   </head>
   <body>
     <header>
-      <div>
-        <div>
-          <a href="{% url "courses:courses_list" %}">Список курсів</a>
-          <a href="{% url "users:users_list" %}">Список авторів</a>
+      <div class="nav-container">
+        <div class="nav-links">
+          <a href="{% url 'courses:courses_list' %}">Список курсів</a>
+          <a href="{% url 'users:users_list' %}">Список авторів</a>
         </div>
-        <div>
-          <a href="">Профіль</a>
-          <a href="">Увійти</a>
-          <a href="">Зареєструватись</a>
+        <div class="auth-links nav-links">
+          {% if user.is_authenticated %}
+            <a href="{% url 'users:profile' %}">Профіль ({{ user.username }})</a>
+            <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-logout">Вийти</button>
+            </form>
+          {% else %}
+            <a href="{% url 'users:login' %}">Увійти</a>
+            <a href="{% url 'users:register' %}">Зареєструватись</a>
+          {% endif %}
         </div>
       </div>
     </header>
 
     <main>
-      <h1>IT Курси - онлайн</h1>
-      <p>Ласкаво просимо до нашої платформи онлайн курсів</p>
+      <section class="hero-section">
+        <h1 class="hero-title">IT Курси - онлайн</h1>
+        <p class="hero-subtitle">Ласкаво просимо до нашої платформи онлайн-курсів</p>
+      </section>
     </main>
 
     <footer>
-      <p>Номер телефону: +360639660508</p>
-      <p>email-адреса: dent4ik14@gmail.com</p>
-      <p>telegram: @Denes_Solom; @G0nh1k</p>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
     </footer>
   </body>
 </html>

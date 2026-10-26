@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import ListView, DetailView
-from .models import Course, CourseCategory
+from .models import Course, CourseCategory, Video
 from users.models import User
+from .forms import CourseForm
 # Create your views here.
 class CoursesList(ListView):
     model = Course
@@ -36,3 +38,28 @@ class AboutCourse(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Про курс'
         return context
+
+@login_required
+@permission_required(
+    'courses.add_course', raise_exception=True
+)
+def add_course(request):
+  if request.method == 'POST':
+    form = CourseForm(request.POST, request.FILES)
+    files = request.FILES.getlist('files')
+
+    if form.is_valid():
+      course = form.save(commit=False)
+      course.authot = request.user
+      course.save()
+      for f in files:
+        Video.objects.create(
+            course=course,
+            video_file=f,
+            title=f.name,
+        )
+      return redirect('courses:course_detail', pk=course.pk)
+  else:
+    form = CourseForm()
+
+  return render(request, 'courses/add_course.html', {'form': form})

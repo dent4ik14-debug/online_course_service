@@ -1,44 +1,54 @@
+{% load static %}
 <!doctype html>
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'courses/css/style.css' %}" />
   </head>
   <body>
     <header>
-      <div>
-        <div>
+      <div class="nav-container">
+        <div class="nav-links">
           <a href="{% url 'index' %}">Головна</a>
-          <a href="{% url "courses:courses_list" %}">Список курсів</a>
+          <a href="{% url 'courses:courses_list' %}">Список курсів</a>
         </div>
       </div>
     </header>
 
     <main>
-        <h2>{{ course.name }}</h2>
-        <h2>{{ course.author }}</h2>
-        <p>{{ course.description }}</p>
+      <section class="course-header">
+        <h1 class="course-title">{{ course.name }}</h1>
+        <div class="course-author">Автор: {{ course.authot }}</div>
+        <p class="course-description">{{ course.description }}</p>
+      </section>
 
-        <h3>Відеоуроки курсу:</h3>
+      <h3 class="section-title">Відеоуроки курсу:</h3>
 
+      <div class="video-grid">
         {% for video in course.videos.all %}
-        <div>
-            <h4>{{ video.title }}</h4>
-            <video width="100%" controls>
-            <source src="{{ video.video_file.url }}" type="video/mp4">
+        <div class="video-card">
+          <h4 class="video-title">{{ video.title }}</h4>
+          <video class="video-player" controls>
+            <source src="{{ video.video_file.url }}" type="video/mp4" />
             Ваш браузер не підтримує відтворення відео.
-            </video>
+          </video>
         </div>
         {% empty %}
-        <p>У цьому курсі ще немає завантажених відео.</p>
+        <div class="empty-state">
+          <p>У цьому курсі ще немає завантажених відео.</p>
+        </div>
         {% endfor %}
+      </div>
     </main>
 
     <footer>
-      <p>Номер телефону: +360639660508</p>
-      <p>email-адреса: dent4ik14@gmail.com</p>
-      <p>telegram: @Denes_Solom; @G0nh1k</p>
+      <div class="footer-container">
+        <p>Номер телефону: +360639660508</p>
+        <p>Email-адреса: dent4ik14@gmail.com</p>
+        <p>Telegram: @Denes_Solom; @G0nh1k</p>
+      </div>
     </footer>
   </body>
 </html>
