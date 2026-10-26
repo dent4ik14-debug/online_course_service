@@ -9,7 +9,7 @@
     <header>
       <div>
         <div>
-          <a href="">Головна</a>
+          <a href="{% url "index" %}">Головна</a>
         </div>
         <div>
             <a href="">Профіль</a>
@@ -33,18 +33,21 @@
       </h1>
 
       <div>
-        <a href="">Всі категорії</a>
+        <a href="{% url 'courses:courses_list' %}">Всі категорії</a>
+
         {% for category in categories %}
-          <a href="">
+          <a href="{% url 'courses:courses_list' %}?category_id={{ category.id }}">
             {{ category.name }}
           </a>
+        {% empty %}
+          <p>Категорій поки немає.</p>
         {% endfor %}
       </div>
 
       <section>
         {% for course in object_list %}
           <div>
-            <a href="">{{ course.name }}</a>
+            <a href="{% url 'courses:course_detail' course.id %}">{{ course.name }}</a>
             
         {% endfor %}
       </section>

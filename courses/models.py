@@ -22,7 +22,7 @@ class Video(models.Model):
         upload_to='videos/', 
         validators=[FileExtensionValidator(allowed_extensions=['mp4', 'webm', 'mkv'])]
     )
-    course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(to=Course, on_delete=models.CASCADE, related_name='videos')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
