@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <header>
+      <div>
+        <div>
+          <a href="">Головна</a>
+        </div>
+        <div>
+            <a href="">Профіль</a>
+            <form action="" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-link" style="padding: 0; border: none; background: none;">Вийти</button>
+            </form>
+            <a href="">Увійти</a>
+            <a href="">Зареєструватись</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <h1>
+        {% if curent_category %}
+          Категорія: {{ curent_category.name }}
+        {% else %}
+          Всі категорії
+        {% endif %}
+      </h1>
+
+      <div>
+        <a href="">Всі категорії</a>
+        {% for category in categories %}
+          <a href="">
+            {{ category.name }}
+          </a>
+        {% endfor %}
+      </div>
+
+      <section>
+        {% for course in object_list %}
+          <div>
+            <a href="">{{ course.name }}</a>
+            
+        {% endfor %}
+      </section>
+    </main>
+
+    <footer>
+      <p>Номер телефону: +360639660508</p>
+      <p>email-адреса: dent4ik14@gmail.com</p>
+      <p>telegram: @Denes_Solom; @G0nh1k</p>
+    </footer>
+  </body>
+</html>
